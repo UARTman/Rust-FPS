@@ -28,3 +28,31 @@ impl Default for KeyPresses {
         KeyPresses(Vec::new())
     }
 }
+
+#[derive(Default)]
+pub struct GameField {
+    pub field: Vec<Vec<char>>
+}
+
+impl GameField {
+    pub fn new() -> Self {
+        let field = vec!(
+            Vec::from("############"),
+            Vec::from("#          #"),
+            Vec::from("#          #"),
+            Vec::from("#          #"),
+            Vec::from("#          #"),
+            Vec::from("#          #"),
+            Vec::from("#          #"),
+            Vec::from("#          #"),
+            Vec::from("#          #"),
+            Vec::from("#          #"),
+            Vec::from("#          #"),
+            Vec::from("############"),
+        );
+        let field_char = field.iter()
+            .map(|x| x.iter()
+                .map(|y| *y as char).collect::<Vec<char>>()).collect::<Vec<Vec<char>>>();
+        GameField { field: field_char }
+    }
+}

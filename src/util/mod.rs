@@ -1,6 +1,5 @@
-use rustbox::Color::White;
-use rustbox::OutputMode::Normal;
-use rustbox::{Color, RustBox, Style, RB_NORMAL};
+use rustbox::RustBox;
+// use rustbox::OutputMode::Normal;
 
 pub fn init_rustbox() -> RustBox {
     match RustBox::init(Default::default()) {
