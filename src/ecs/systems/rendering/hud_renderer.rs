@@ -4,7 +4,7 @@ use specs::prelude::*;
 
 use crate::ecs::components::Player;
 use crate::ecs::components::position::Position;
-use crate::ecs::resources::{GameField, RustBoxWrapper, RendererRes};
+use crate::ecs::resources::{GameField, RustBoxWrapper};
 
 pub struct HudRenderer;
 
@@ -12,7 +12,6 @@ pub struct HudRenderer;
 pub struct HudRendererData<'a> {
     field: Read<'a, GameField>,
     rustbox: Read<'a, RustBoxWrapper>,
-    renderer: Read<'a, RendererRes>,
     player: ReadStorage<'a, Player>,
     position: ReadStorage<'a, Position>,
 }
@@ -21,9 +20,8 @@ impl<'a> System<'a> for HudRenderer {
     type SystemData = HudRendererData<'a>;
 
     fn run(&mut self, data: Self::SystemData) {
-        let renderer = &data.renderer.0;
 
-        let (map_start_x, map_start_y) = if data.renderer.0.width() < 12 || data.rustbox.0.height() < 12 {
+        let (map_start_x, map_start_y) = if data.rustbox.0.width() < 12 || data.rustbox.0.height() < 12 {
             (0, 0)
         } else {
             (data.rustbox.0.width() - 12, data.rustbox.0.height() - 12)

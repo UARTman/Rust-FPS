@@ -10,12 +10,11 @@ use specs::{Builder, DispatcherBuilder, World, WorldExt};
 
 use crate::ecs::components::Player;
 use crate::ecs::components::position::Position;
-use crate::ecs::resources::{Clock, Counter, GameField, GameStatus, KeyPresses, RustBoxWrapper, RendererRes};
+use crate::ecs::resources::{Clock, Counter, GameField, GameStatus, KeyPresses, RustBoxWrapper};
 use crate::ecs::resources::event::{Event, Events};
 use crate::ecs::resources::event::Event::{MoveDown, MoveLeft, MoveRight, MoveUp, Quit};
 use crate::ecs::systems::{HudRenderer, MessageRenderer, PMoveHandler, QuitHandler, RBF, RaycastRenderer};
 use crate::util::init_rustbox;
-use crate::renderer::termbox::TermboxRenderer;
 
 mod ecs;
 mod util;

@@ -7,8 +7,6 @@ use rustbox::{Key, RustBox, Style, Color};
 pub use input_handling::*;
 
 use crate::ecs::components::position::Position;
-use crate::renderer::{Renderer};
-use crate::renderer::termbox::TermboxRenderer;
 use crate::util::init_rustbox;
 
 pub mod input_handling;
