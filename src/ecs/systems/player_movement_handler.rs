@@ -1,12 +1,10 @@
 use std::time::Duration;
 
-use rustbox::{Key, RB_NORMAL};
-use rustbox::Color::{Black, White};
 use specs::prelude::*;
 
 use crate::ecs::components::Player;
 use crate::ecs::components::position::Position;
-use crate::ecs::resources::{Clock, Counter, GameField, GameStatus, KeyPresses, RustBoxWrapper};
+use crate::ecs::resources::{Clock, Counter, GameField, GameStatus};
 use crate::ecs::resources::event::{Event, Events};
 use crate::ecs::resources::event::Event::MoveUp;
 

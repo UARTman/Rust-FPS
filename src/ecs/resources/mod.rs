@@ -2,23 +2,13 @@ use std::ops::{Div, Mul};
 use std::rc::Rc;
 use std::sync::{Arc, Mutex};
 
-use rustbox::{Key, RustBox, Style, Color};
-
 pub use input_handling::*;
 
 use crate::ecs::components::position::Position;
-use crate::util::init_rustbox;
+
 
 pub mod input_handling;
 pub mod event;
-
-pub struct RustBoxWrapper(pub Arc<RustBox>);
-
-impl Default for RustBoxWrapper {
-    fn default() -> Self {
-        RustBoxWrapper(Arc::new(init_rustbox()))
-    }
-}
 
 pub struct GameStatus(pub bool);
 

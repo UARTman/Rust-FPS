@@ -1,9 +1,8 @@
-use rustbox::RustBox;
-// use rustbox::OutputMode::Normal;
 
-pub fn init_rustbox() -> RustBox {
-    match RustBox::init(Default::default()) {
-        Result::Ok(v) => v,
-        Result::Err(e) => panic!("{}", e),
-    }
+use std::io::stdout;
+use crossterm::ExecutableCommand;
+use crossterm::cursor::MoveTo;
+
+pub fn moveto(x: usize, y: usize) {
+    stdout().execute(MoveTo(x as u16, y as u16));
 }

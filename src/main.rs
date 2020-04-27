@@ -3,30 +3,37 @@ use std::rc::Rc;
 use std::sync::Arc;
 use std::time::{Duration, Instant, SystemTime};
 
-use rustbox::{Color, RB_NORMAL, RustBox};
-use rustbox::Color::{Black, White};
-use rustbox::Key;
+
 use specs::{Builder, DispatcherBuilder, World, WorldExt};
 
 use crate::ecs::components::Player;
 use crate::ecs::components::position::Position;
-use crate::ecs::resources::{Clock, Counter, GameField, GameStatus, KeyPresses, RustBoxWrapper};
+use crate::ecs::resources::{Clock, Counter, GameField, GameStatus};
 use crate::ecs::resources::event::{Event, Events};
 use crate::ecs::resources::event::Event::{MoveDown, MoveLeft, MoveRight, MoveUp, Quit};
 use crate::ecs::systems::{HudRenderer, MessageRenderer, PMoveHandler, QuitHandler, RBF, RaycastRenderer};
-use crate::util::init_rustbox;
+use crossterm::event::{poll, read, KeyEvent, KeyCode};
+use std::io::{stdout, Write};
+use crossterm::ExecutableCommand;
+use crossterm::terminal::{Clear, SetSize, enable_raw_mode};
+use crossterm::terminal::ClearType::All;
 
 mod ecs;
 mod util;
 
 fn main() {
     let mut world = World::new();
+    enable_raw_mode();
 
-    let rust_box = Arc::new(init_rustbox());
+    stdout().execute(SetSize(180, 60));
+    stdout().execute(Clear(All));
+    stdout().execute(crossterm::cursor::Hide);
+    stdout().flush();
+
+    // let rust_box = Arc::new(init_rustbox());
 
     world.register::<Player>();
     world.register::<Position>();
-    world.insert(RustBoxWrapper(Arc::clone(&rust_box)));
     world.insert(GameStatus(true));
     world.insert(GameField::new());
     world.insert(Clock::default());
@@ -49,38 +56,44 @@ fn main() {
 
 
     loop {
-        rust_box.clear();
+        // stdout().execute(Clear(All));
+
         let new_now = Instant::now();
         let delta_time = new_now.duration_since(now).as_secs_f32();
         if delta_time < (1.0 / 60.0) { continue; }
         now = new_now;
         world.write_resource::<Clock>().delta_time = delta_time;
 
-        match rust_box.peek_event(Duration::new(0, 10), false) {
-            Ok(rustbox::Event::KeyEvent(key)) => {
-                match key {
-                    Key::Char('w') => {
-                        world.write_resource::<Events>().last_event = Some(MoveUp);
+        if poll(Duration::from_millis(10)).unwrap() {
+            // It's guaranteed that the `read()` won't block when the `poll()`
+            // function returns `true`
+            match read().unwrap() {
+                crossterm::event::Event::Key(event) => {
+                    match event.code {
+                        KeyCode::Char('w') => {
+                            world.write_resource::<Events>().last_event = Some(MoveUp)
+                        },
+                        KeyCode::Char('s') => {
+                            world.write_resource::<Events>().last_event = Some(MoveDown);
+                        }
+                        KeyCode::Char('a') => {
+                            world.write_resource::<Events>().last_event = Some(MoveLeft);
+                        }
+                        KeyCode::Char('d') => {
+                            world.write_resource::<Events>().last_event = Some(MoveRight);
+                        }
+                        KeyCode::Char('q') => {
+                            world.write_resource::<Events>().last_event = Some(Quit);
+                        }
+                        _ => {}
                     }
-                    Key::Char('s') => {
-                        world.write_resource::<Events>().last_event = Some(MoveDown);
-                    }
-                    Key::Char('a') => {
-                        world.write_resource::<Events>().last_event = Some(MoveLeft);
-                    }
-                    Key::Char('d') => {
-                        world.write_resource::<Events>().last_event = Some(MoveRight);
-                    }
-                    Key::Char('q') => {
-                        world.write_resource::<Events>().last_event = Some(Quit);
-                    }
-                    _ => {}
-                }
+
+                },
+                crossterm::event::Event::Mouse(event) => {},
+                crossterm::event::Event::Resize(width, height) => {},
             }
-            Ok(rustbox::Event::ResizeEvent(_, _)) => {}
-            Err(e) => panic!("{}", e.to_string()),
-            _ => {}
         }
+
 
         dispatcher.dispatch(&world);
         world.maintain();

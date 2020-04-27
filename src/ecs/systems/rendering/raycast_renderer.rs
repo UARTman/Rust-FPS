@@ -1,12 +1,12 @@
 use std::f32::consts::PI;
 
-use rustbox::{RB_NORMAL, RustBox};
-use rustbox::Color::{Black, White};
 use specs::prelude::*;
 
 use crate::ecs::components::Player;
 use crate::ecs::components::position::Position;
-use crate::ecs::resources::{GameField, RustBoxWrapper};
+use crate::ecs::resources::{GameField};
+use crate::util::moveto;
+use std::io::{stdout, Write};
 
 pub struct RaycastRenderer;
 
@@ -15,7 +15,6 @@ pub struct RaycastRenderData<'a> {
     pub field: Read<'a, GameField>,
     pub player: ReadStorage<'a, Player>,
     pub position: ReadStorage<'a, Position>,
-    pub rustbox: Read<'a, RustBoxWrapper>,
 }
 
 impl<'a> System<'a> for RaycastRenderer {
@@ -61,14 +60,9 @@ impl<'a> System<'a> for RaycastRenderer {
 
             for i in 0..width {
                 for j in 0..height {
-                    data.rustbox.0.print_char(
-                        i,
-                        j,
-                        RB_NORMAL,
-                        White,
-                        Black,
-                        render_buffer[i][j],
-                    )
+                    moveto(i,j);
+                    print!("{}", render_buffer[i][j]);
+                    // stdout().flush();
                 }
             }
         }

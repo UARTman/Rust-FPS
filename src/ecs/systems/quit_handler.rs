@@ -1,7 +1,6 @@
-use rustbox::Key;
 use specs::prelude::*;
 
-use crate::ecs::resources::{GameStatus, KeyPresses, RustBoxWrapper, Counter, Clock};
+use crate::ecs::resources::{GameStatus, Counter, Clock};
 use std::time::Duration;
 use crate::ecs::resources::event::{Event, Events};
 
