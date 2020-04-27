@@ -1,5 +1,6 @@
-use crate::ecs::resources::RustBoxWrapper;
 use specs::prelude::*;
+
+use crate::ecs::resources::RustBoxWrapper;
 
 pub struct RBF;
 
