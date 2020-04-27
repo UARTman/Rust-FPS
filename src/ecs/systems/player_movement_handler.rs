@@ -14,7 +14,6 @@ pub struct PMoveHandler;
 
 #[derive(SystemData)]
 pub struct PMHData<'a> {
-    pub rustbox: Read<'a, RustBoxWrapper>,
     pub events: Write<'a, Events>,
     pub player: ReadStorage<'a, Player>,
     pub pos: WriteStorage<'a, Position>,
@@ -40,11 +39,11 @@ impl<'a> System<'a> for PMoveHandler {
                 events.last_event = None;
             }
             Some(Event::MoveLeft) => {
-                movement.1 -= 0.3;
+                movement.1 -= 0.5;
                 events.last_event = None;
             }
             Some(Event::MoveRight) => {
-                movement.1 += 0.3;
+                movement.1 += 0.5;
                 events.last_event = None;
             }
             _ => {}
@@ -58,16 +57,6 @@ impl<'a> System<'a> for PMoveHandler {
                 pos.y -= data.clock.unbind(movement.0 * pos.angle.sin());
             }
             pos.angle += data.clock.unbind(movement.1);
-
-            // data.rustbox.0.print(2, 2, RB_NORMAL, White, Black, format!("X:{}", pos.x).as_str());
-            // data.rustbox.0.print(2, 3, RB_NORMAL, White, Black, format!("Y:{}", pos.y).as_str());
-            // data.rustbox.0.print(2, 4, RB_NORMAL, White, Black, format!("Angle in rad:{}", pos.angle).as_str());
-            // data.rustbox.0.print(2, 5, RB_NORMAL, White, Black, format!("Angle in deg:{}", pos.angle / 0.01745329252).as_str());
-            //
-            // let trace = data.field.trace(pos, None);
-            // data.rustbox.0.print(2, 6, RB_NORMAL, White, Black, format!("Trace: X:{} Y:{}", (trace.0).0, (trace.0).1).as_str());
-            // data.rustbox.0.print(2, 7, RB_NORMAL, White, Black, format!("Traced length:{}", trace.1).as_str());
-            // data.rustbox.0.print(2, 8, RB_NORMAL, White, Black, format!("Traced tile:{}", trace.2).as_str());
         }
     }
 }

@@ -27,14 +27,23 @@ impl<'a> System<'a> for RaycastRenderer {
         let height = 40;
 
         for (_, player_pos) in (&data.player, &data.position).join() {
-            let mut reversed_render: Vec<Vec<char>> = Vec::new();
+            let mut render_buffer: Vec<Vec<char>> = Vec::new();
+
             for i in 0..width {
                 let mut col: Vec<char> = Vec::new();
-                let desired_angle = player_pos.angle - (PI / 2.0) + i as f32 * (PI / width as f32);
-                let ((_, _), distance, _) = data.field.trace(player_pos, Some(desired_angle));
+                let desired_angle = player_pos.angle - (PI / 3.0) + i as f32 * ((PI / 1.5)  / width as f32);
+                let ((tx, ty), distance, _) = data.field.trace(player_pos, Some(desired_angle));
 
-                let fill = { if distance < 2.0 { '█' } else if distance < 6.0 { '▓' } else if distance < 8.0 { '▒' } else if distance < 12.0 { '░' } else { ' ' } };
-                let margin = (distance * 0.6) as usize;
+                let mut fill = { if distance < 2.0 { '█' } else if distance < 6.0 { '▓' } else if distance < 8.0 { '▒' } else if distance < 12.0 { '░' } else { ' ' } };
+                let margin = (distance * 1.2) as usize;
+
+                if (((tx.ceil() - tx).abs() < 0.05) || ((tx.floor() - tx).abs() < 0.05))
+                    &&
+                    (((ty.ceil() - ty).abs() < 0.05) || ((ty.floor() - ty).abs() < 0.05))
+                {
+                    fill = '.';
+                }
+
 
                 for _ in 0..margin {
                     col.push('^');
@@ -46,7 +55,8 @@ impl<'a> System<'a> for RaycastRenderer {
                 for _ in 0..margin {
                     col.push('_')
                 }
-                reversed_render.push(col);
+
+                render_buffer.push(col);
             }
 
             for i in 0..width {
@@ -57,7 +67,7 @@ impl<'a> System<'a> for RaycastRenderer {
                         RB_NORMAL,
                         White,
                         Black,
-                        reversed_render[i][j],
+                        render_buffer[i][j],
                     )
                 }
             }

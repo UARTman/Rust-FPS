@@ -10,22 +10,23 @@ use specs::{Builder, DispatcherBuilder, World, WorldExt};
 
 use crate::ecs::components::Player;
 use crate::ecs::components::position::Position;
-use crate::ecs::resources::{Clock, Counter, GameField, GameStatus, KeyPresses, RustBoxWrapper};
+use crate::ecs::resources::{Clock, Counter, GameField, GameStatus, KeyPresses, RustBoxWrapper, RendererRes};
 use crate::ecs::resources::event::{Event, Events};
 use crate::ecs::resources::event::Event::{MoveDown, MoveLeft, MoveRight, MoveUp, Quit};
 use crate::ecs::systems::{HudRenderer, MessageRenderer, PMoveHandler, QuitHandler, RBF, RaycastRenderer};
 use crate::util::init_rustbox;
+use crate::renderer::termbox::TermboxRenderer;
 
 mod ecs;
 mod util;
 
 fn main() {
     let mut world = World::new();
+
     let rust_box = Arc::new(init_rustbox());
 
     world.register::<Player>();
     world.register::<Position>();
-
     world.insert(RustBoxWrapper(Arc::clone(&rust_box)));
     world.insert(GameStatus(true));
     world.insert(GameField::new());
