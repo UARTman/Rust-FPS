@@ -11,4 +11,6 @@
 - [ ] Enemies
   - [ ] ...
 
+Due to issues with termbox only runs on Linux (or maybe MacOS)
+
 To run use `cargo run`
