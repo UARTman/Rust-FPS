@@ -36,13 +36,6 @@ impl<'a> System<'a> for RaycastRenderer {
                 let mut fill = { if distance < 2.0 { '█' } else if distance < 6.0 { '▓' } else if distance < 8.0 { '▒' } else if distance < 12.0 { '░' } else { ' ' } };
                 let margin = (distance * 1.2) as usize;
 
-                if (((tx.ceil() - tx).abs() < 0.05) || ((tx.floor() - tx).abs() < 0.05))
-                    &&
-                    (((ty.ceil() - ty).abs() < 0.05) || ((ty.floor() - ty).abs() < 0.05))
-                {
-                    fill = '.';
-                }
-
 
                 for _ in 0..margin {
                     col.push('^');
